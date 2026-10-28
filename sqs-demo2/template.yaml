@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Simple SAM Template deploying HelloJava with an API Gateway GET endpoint.
+
+Resources:
+  HelloJavaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # Explicitly forces the deployment to use your exact function name
+      FunctionName: HelloJava
+
+      # Matches the package and class layout from your Java code
+      Handler: example.Hello::handleRequest
+      Runtime: java21
+      Architecture: x86_64
+      MemorySize: 512
+      Timeout: 15
+
+      # Points to the root directory where pom.xml is located
+      CodeUri: .
+
+      # Instructs SAM to package the custom JAR via your Makefile
+      Metadata:
+        BuildMethod: makefile
+
+      # Configures API Gateway HTTP API endpoint and its internal invoke permissions
+      Events:
+        GetHelloApi:
+          Type: HttpApi
+          Properties:
+            Path: /hello
+            Method: get
+
+Outputs:
+  HelloApiUrl:
+    Description: "API Gateway endpoint URL for the HelloJava function"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}://"
+
