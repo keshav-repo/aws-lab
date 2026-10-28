@@ -13,16 +13,13 @@ Resources:
       # Matches the package and class layout from your Java code
       Handler: example.Hello::handleRequest
       Runtime: java21
-      Architecture: x86_64
+      Architectures:
+        - x86_64
       MemorySize: 512
       Timeout: 15
 
       # Points to the root directory where pom.xml is located
       CodeUri: .
-
-      # Instructs SAM to package the custom JAR via your Makefile
-      Metadata:
-        BuildMethod: makefile
 
       # Configures API Gateway HTTP API endpoint and its internal invoke permissions
       Events:
@@ -36,4 +33,3 @@ Outputs:
   HelloApiUrl:
     Description: "API Gateway endpoint URL for the HelloJava function"
     Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}://"
-
